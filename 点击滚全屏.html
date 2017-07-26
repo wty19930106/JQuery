@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<style type="text/css">
+		body{
+			margin: 0;
+			padding: 0;
+		}
+		ul,li{
+			margin: 0;
+			padding: 0;
+			list-style: none;
+		}
+		#ul{
+			list-style: none;
+			width: 50px;
+			position: fixed;
+			top: 50%;
+			right: 10px;
+		}
+		#ul li{
+			list-style: none;
+			width: 20px;
+			height: 20px;
+			border-radius: 50%;
+			background: #CCCCCC;
+			margin-bottom: 5px;
+		}
+		#ul li.active{
+			background: #002952;
+		}
+	</style>
+	<body>
+		<ul id="page">
+			
+		</ul>
+		<ul id="ul">
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+			<li></li>
+		</ul>
+		<script src="jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			let color =['red','pink','yellow','skyblue','purple'];
+			let h= $(window).innerHeight();
+			$('#ul').find('li').first().addClass('active');
+			color.forEach((e)=>{
+				var li=$('<li style="background:'+e+';height:'+h+'px"></li>');
+				$('#page').append(li);
+			})
+			$('#ul').find('li').click(function(){
+				let _index=$(this).index();
+				$(this).addClass('active').siblings().removeClass('active');
+				$('body').animate({
+					scrollTop:$('#page').find('li').eq(_index).offset().top
+				})
+			})
+			$(window).resize(function(){
+				$('#page').html('');
+				$('#ul').find('li').first().addClass('active');
+				let h= $(window).innerHeight();
+				color.forEach((e)=>{
+					var li=$('<li style="background:'+e+';height:'+h+'px"></li>');
+					$('#page').append(li);
+				})
+			})
+		</script>
+	</body>
+</html>
