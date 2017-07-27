@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title></title>
+<style type="text/css">
+body,
+h1 {
+	margin: 0;
+}
+ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+input {
+	outline: none;
+}
+table {
+	border-collapse: collapse;
+	border: #bbb;
+}
+body {
+	width: 100%;
+	height: 100%;
+	/*background: url(img/2.jpg) no-repeat;*/
+}
+.tBody {
+	position: absolute;
+	left: 50%;
+	transform: translateX(-50%);
+	margin-top: 30px;
+	padding: 20px 30px 40px;
+	background-color: rgba(255,255,255,.6);
+}
+.title {
+	text-align: center;
+	color: #fca113;
+	text-shadow: 0 0 2px #fcf913;
+	line-height: 50px;
+}
+table {
+	background-color: #fff;
+}
+th {
+	background-color: #ddd;
+}
+tr {
+	height: 30px;
+}
+ul {
+	padding: 5px 0;
+	width: 600px;
+	text-align: center;
+}
+td{
+	text-align: center;
+}
+td input {
+	margin: 0 2px;
+}
+li {
+	padding: 5px 0;
+	overflow: hidden;
+}
+label {
+	display: inline-block;
+}
+input[type="text"] {
+	border: 1px solid #ccc;
+	width: 80px;
+	height: 20px;
+}
+/*.active {
+	background-color: #f7cb75;
+}*/
+/*#tab tbody tr:hover {
+	background-color: #f7cb75;
+}*/
+</style>
+</head>
+<body>
+<section class="tBody">
+	<h1 class="title"></h1>
+	<ul id="header">
+		<li class="addPre">
+			<label>名字： <input type="text" name="" /></label>
+			<label>年龄： <input type="text" /></label>
+			<input type="button" value="添加" />
+		</li>
+		<li>
+			<span>排序</span>
+			<select>
+				<option value="price">年龄</option>
+				<option value="id">编号</option>
+			</select>
+			<select>
+				<option value='2'>从高到底</option>
+				<option value='1'>从低到高</option>
+			</select>
+			<input type="button" value="提交" />
+			<input type="button" value="批量删除" />
+		</li>
+	</ul>
+	<table id="tab" width="600" align="center" border="1">
+		<thead>
+			<th>全选<input type="checkbox" id="checkAll"></th>
+			<th index="id">编号</th>
+			<th>商品</th>
+			<th index="price">年龄</th>
+			<th>操作</th>
+		</thead>
+		<tbody>
+			<!--<tr>
+				<td><input type="checkbox"></td>
+				<td>1</td>
+				<td>露露</td>
+				<td>12</td>
+				<td>
+					<input type="button" value="删除"/>
+					<input type="button" value="上移">
+					<input type="button" value="下移">
+				</td>
+			</tr>-->
+		</tbody>
+	</table>	
+</section>
+</body>
+<script src="jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script>
+var data = [
+    {
+        'id' : 1,
+        'name' : 'momo',
+        'price' : 36
+    },
+    {
+        'id' : 2,
+        'name' : '小恋',
+        'price' : 40
+    },
+    {
+        'id' : 3,
+        'name' : 'yaya',
+        'price' : 20
+    },
+    {
+        'id' : 4,
+        'name' : 'feifei',
+        'price' : 10
+    },
+    {
+        'id' : 5,
+        'name' : 'hhehe',
+        'price' : 35
+    }
+];
+function init(obj){
+		let tr=$(`<tr>
+				<td><input type="checkbox"></td>
+				<td>${obj.id}</td>
+				<td>${obj.name}</td>
+				<td>${obj.price}</td>
+				<td>
+					<input type="button" value="删除"/>
+					<input type="button" value="上移">
+					<input type="button" value="下移">
+				</td>
+			</tr>`);
+		$('tbody').append(tr);
+		$('tbody').find('tr:odd').css('background','#ccc');
+		$('tbody').find('tr:even').css('background','#fff');
+		//删除上移下移
+		tr.find(':checkbox').click(function(){
+			allCheck();
+		})
+		tr.find(':button').eq(0).click(function(){
+			$(this).closest('tr').remove();
+			for(var i=0;i<data.length;i++){
+				if(obj.id==data[i].id){
+					data.splice(i,1);
+				}
+			}
+			xuanran();
+			allCheck();
+		})
+		tr.find(':button').eq(1).click(function(){
+			if($(this).closest('tr').prev()){
+				$(this).closest('tr').insertBefore($(this).closest('tr').prev())
+			}
+		})
+		tr.find(':button').eq(2).click(function(){
+			if($(this).closest('tr').next()){
+				$(this).closest('tr').next().insertBefore($(this).closest('tr'))
+			}
+		})
+}
+xuanran();
+function xuanran(){
+	$('tbody').html('');
+	data.forEach((e,i)=>{
+	e.id=i+1;
+	init(e);
+	})
+}
+
+//判断全选
+function allCheck(){
+	var num =0;
+	let $btns=$('tbody').find(':checkbox');
+	$btns.each(function(i,e){
+		if($(e).prop('checked')){
+			num++;
+		}	
+		if(num==$btns.length){
+			$('#checkAll').prop('checked',true);
+		}else{
+			$('#checkAll').prop('checked',false);
+		}
+	})	
+}
+
+$('#checkAll').click(function(){
+	if($(this).prop('checked')){
+		$('tbody').find(':checkbox').prop('checked',true);
+	}else{
+		$('tbody').find(':checkbox').prop('checked',false);
+	}
+})
+//添加
+$('.addPre').find(':button').click(function(){
+	var len=data.length;
+	if($('.addPre').find(':text').eq(0).val()&&$('.addPre').find(':text').eq(0).val()){
+		let j={
+			id:len+1,
+			name:$('.addPre').find(':text').eq(0).val(),
+			price:$('.addPre').find(':text').eq(1).val()
+		}
+		data.push(j);
+		init(j);
+		allCheck();
+	}
+	
+})
+//批量删除
+const $del=$('#header').find('li').eq(1).find(':button').eq(1);
+$del.click(function(){
+	var checklen=$('tbody').find(':checkbox');
+	for(var i=0;i<checklen.length;i++){
+		if($(checklen[i]).prop('checked')){
+			for(var j=0;j<data.length;j++){
+				if($(checklen[i]).closest('td').next().text()==data[j].id){
+					data.splice(j,1);
+				}
+			}
+			$(checklen[i]).closest('tr').remove();
+		}
+	}
+	xuanran();
+})
+//年龄排序
+const $sort=$('#header').find('li').eq(1).find(':button').eq(0);
+console.log($sort);
+const $select_1=$('#header').find('li').eq(1).find('select').eq(0);
+const $select_2=$('#header').find('li').eq(1).find('select').eq(1);
+$sort.click(function(){
+	if($select_1.val()=='price'){
+		if($select_2.val()=='2'){
+			data.sort(function(a,b){
+				return b.price-a.price;
+			})
+		}else{
+			data.sort(function(a,b){
+				return a.price-b.price;
+			})
+		}
+		$('tbody').html('');
+		data.forEach((e,i)=>{
+		init(e);
+		})
+	}
+	if($select_1.val()=='id'){
+		if($select_2.val()=='2'){
+			data.sort(function(a,b){
+				return b.id-a.id;
+			})
+		}else{
+			data.sort(function(a,b){
+				return a.id-b.id;
+			})
+		}
+		$('tbody').html('');
+		data.forEach((e,i)=>{
+		init(e);
+		})
+	}
+	
+})
+
+
+	
+</script>
+</html>
