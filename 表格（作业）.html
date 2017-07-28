@@ -177,12 +177,13 @@ function init(obj){
 		})
 		tr.find(':button').eq(0).click(function(){
 			$(this).closest('tr').remove();
-			for(var i=0;i<data.length;i++){
-				if(obj.id==data[i].id){
+			$(data).each(function(i,e){
+				if(obj.id==e.id){
 					data.splice(i,1);
 				}
-			}
-			xuanran();
+			})
+			Tab();
+			/*console.log(data)*/
 			allCheck();
 		})
 		tr.find(':button').eq(1).click(function(){
@@ -196,10 +197,10 @@ function init(obj){
 			}
 		})
 }
-xuanran();
-function xuanran(){
+Tab();
+function Tab(){
 	$('tbody').html('');
-	data.forEach((e,i)=>{
+	$(data).each((i,e)=>{
 	e.id=i+1;
 	init(e);
 	})
@@ -257,11 +258,10 @@ $del.click(function(){
 			$(checklen[i]).closest('tr').remove();
 		}
 	}
-	xuanran();
+	Tab();
 })
 //年龄排序
 const $sort=$('#header').find('li').eq(1).find(':button').eq(0);
-console.log($sort);
 const $select_1=$('#header').find('li').eq(1).find('select').eq(0);
 const $select_2=$('#header').find('li').eq(1).find('select').eq(1);
 $sort.click(function(){
@@ -276,7 +276,7 @@ $sort.click(function(){
 			})
 		}
 		$('tbody').html('');
-		data.forEach((e,i)=>{
+		$(data).each((i,e)=>{
 		init(e);
 		})
 	}
@@ -291,7 +291,7 @@ $sort.click(function(){
 			})
 		}
 		$('tbody').html('');
-		data.forEach((e,i)=>{
+		$(data).each((i,e)=>{
 		init(e);
 		})
 	}
